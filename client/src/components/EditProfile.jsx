@@ -49,7 +49,7 @@ const EditProfile = () => {
       }
       setloading(true);
       const res = await axios.post(
-        "http://localhost:3000/api/v1/user/profile/edit",
+        "https://instaclone-sje7.onrender.com/api/v1/user/profile/edit",
         formData,
         {
           headers: {

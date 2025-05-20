@@ -30,7 +30,7 @@ app.use(urlencoded({ extended: true }));
 
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: process.env.URL,
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -40,8 +40,8 @@ app.use(cors(corsOptions));
 
 //api incoming
 app.use('/api/v1/user' ,userRoute);
-"http://localhost:3000/api/v1/user/register"
-"http://localhost:3000/api/v1/user/login"
+"https://instaclone-sje7.onrender.com/v1/user/register"
+"https://instaclone-sje7.onrender.com/api/v1/user/login"
 
 app.use('/api/v1/message' ,messageRoute);
 app.use('/api/v1/post' ,postRoute);

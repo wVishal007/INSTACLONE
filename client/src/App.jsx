@@ -56,7 +56,7 @@ function App() {
   const {user} = useSelector(store=>store.auth)
   useEffect(() => {
  if(user){
-  const socketio = io('http://localhost:3000',{
+  const socketio = io('https://instaclone-sje7.onrender.com',{
     query:{
       userId:user?._id
     },transports:['websocket']

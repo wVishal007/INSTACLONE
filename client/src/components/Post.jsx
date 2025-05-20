@@ -48,7 +48,7 @@ const Post = ({ post }) => {
     const FollowUnfollowHandler = async (USER) => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/v1/user/followorUnfollow/${USER?._id}`,
+        `https://instaclone-sje7.onrender.com/api/v1/user/followorUnfollow/${USER?._id}`,
         {},
         { withCredentials: true }
       );
@@ -68,7 +68,7 @@ const Post = ({ post }) => {
     try {
       const action = liked ? "unlike" : "like";
       const res = await axios.get(
-        `http://localhost:3000/api/v1/post/${post?._id}/${action}`,
+        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/${action}`,
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -98,7 +98,7 @@ const Post = ({ post }) => {
   const commentHandler = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/v1/post/${post?._id}/comment`,
+        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/comment`,
         { text: CommentText },
         {
           headers: {
@@ -132,7 +132,7 @@ const Post = ({ post }) => {
   const SavePostHandler = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/v1/post/${post?._id}/save`,
+        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/save`,
         {},
         { withCredentials: true }
       );
@@ -154,7 +154,7 @@ const Post = ({ post }) => {
     try {
       // alert("deleting post")
       const res = await axios.delete(
-        `http://localhost:3000/api/v1/post/delete/${post?._id}`,
+        `https://instaclone-sje7.onrender.com/api/v1/post/delete/${post?._id}`,
         { withCredentials: true }
       );
       if (res.data.success) {

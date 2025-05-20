@@ -8,7 +8,7 @@ const useGetUserProfile = (userID)=>{
     useEffect(() => {
  const fetchUserProfile = async()=>{
     try {
-        const res = await axios.get(`http://localhost:3000/api/v1/user/${userID}/profile`,{withCredentials:true})
+        const res = await axios.get(`https://instaclone-sje7.onrender.com/api/v1/user/${userID}/profile`,{withCredentials:true})
         if(res.data.success){
 dispatch(setuserProfile(res.data.User))
         }

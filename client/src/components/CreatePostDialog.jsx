@@ -43,7 +43,7 @@ if(imgPreview){
 try {
     console.log(formData)
     setloading(true)
-    const res = await axios.post("http://localhost:3000/api/v1/post/addpost",formData,{
+    const res = await axios.post("https://instaclone-sje7.onrender.com/api/v1/post/addpost",formData,{
         headers:{
 "Content-Type":'multipart/form-data'
         },withCredentials:true

@@ -34,7 +34,7 @@ const Leftsidebar = () => {
   const LogOutHandler = async () => {
     try {
       // console.log("logging out")
-      const res = await axios.get("http://localhost:3000/api/v1/user/logout", {
+      const res = await axios.get("https://instaclone-sje7.onrender.com/api/v1/user/logout", {
         withCredentials: true,
       });
       if (res.data.success) {

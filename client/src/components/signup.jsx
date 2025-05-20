@@ -30,7 +30,7 @@ const Signup = () => {
     try {
       setloading(true);
       const res = await axios.post(
-        "http://localhost:3000/api/v1/user/register",
+        "https://instaclone-sje7.onrender.com/api/v1/user/register",
         input,
         {
           headers: {
