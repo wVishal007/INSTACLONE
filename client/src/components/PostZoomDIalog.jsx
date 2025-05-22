@@ -5,26 +5,24 @@ import { Heart, LucideHeart, MessageCircleDashed } from 'lucide-react'
 import {FaHeart} from 'react-icons/fa'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar.jsx'
 
-const PostZoomDIalog = ({Open,setOpen,item}) => {
-    const {SelectedPost} = useSelector(store=>store.post)
-    const {user,SuggestedUsers} = useSelector(store=>store.auth)
-    const POSTER = SuggestedUsers.filter((item)=>item._id == SelectedPost?.author) 
-    
+const PostZoomDIalog = ({Open,setOpen,item,POSTER}) => {
+    const {user,Following} = useSelector(store=>store.auth)
   return (
     <div>
-   {
-    POSTER &&    <Dialog open={Open}>
+      {
+     <Dialog open={Open}>
         <DialogTrigger asChild></DialogTrigger>
-        <DialogContent className='bg-white flex justify-center max-w-screen md:scale-70 md:w-fit overflow-auto items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
+        <DialogContent className='bg-white flex justify-center md:scale-70 w-fit max-w-screen items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-2 items-center'>
                     <Avatar >
-                        <AvatarImage className='object-cover' src={POSTER[0]?.ProfilePicture}/>
+                       <AvatarImage className='object-cover' src={POSTER?.ProfilePicture}/> 
+                     
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                    <span className='font-semibold'>{POSTER[0]?.username}</span>
-                    {
-                        POSTER[0]?.followers.includes(user?._id) ? (<button className='text-xs font-semibold mx-2 rounded-lg bg-gray-200 text-black px-3 py-1 focus-visible:ring-transparent border-none'>Unfollow</button>):(<button className='text-xs font-semibold mx-2 rounded-lg bg-blue-800 border-none focus-visible:ring-transparent text-white px-3 py-1'>Follow</button>)
+                    <span className='font-semibold'>{POSTER?.username}</span>
+                    { POSTER?.username != user?.username && (
+                        Following.includes(POSTER?._id) ? (<button className='text-xs font-semibold mx-2 rounded-lg bg-gray-200 text-black px-3 py-1 focus-visible:ring-transparent border-none'>Unfollow</button>):(<button className='text-xs font-semibold mx-2 rounded-lg bg-blue-800 border-none focus-visible:ring-transparent text-white px-3 py-1'>Follow</button>))
                     }
                 </div>
                 <img className='object-cover rounded-lg' src={item?.image} alt="" />
@@ -51,7 +49,7 @@ const PostZoomDIalog = ({Open,setOpen,item}) => {
             </div>
         </DialogContent>
       </Dialog>
-   }
+      }
     </div>
   )
 }

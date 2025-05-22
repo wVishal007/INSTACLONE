@@ -6,7 +6,7 @@ import BottomBar from './BottomBar'
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className="font-poppins">
      <div> <Navbar/></div>
 <div className='flex-1'>
     <Leftsidebar/>

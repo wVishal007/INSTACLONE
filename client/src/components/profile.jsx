@@ -81,9 +81,8 @@ const [Zoom, setZoom] = useState(false)
  const [ZoomedPost, setZoomedPost] = useState({})
 
  const PostZoomHandler = (post) =>{
-  setZoom(true)
+setZoom(true)
  setZoomedPost(post)
- setSelectedPost(post)
 }
   return (
     <div className="flex mx-auto w-screen md:max-w-5xl justify-center">
@@ -158,13 +157,13 @@ const [Zoom, setZoom] = useState(false)
                 </span>{" "}
                 posts
               </p>
-              <p>
+              <p className="cursor-pointer">
                 <span className="font-semibold mx-2">
                   {userProfile?.followers?.length}
                 </span>{" "}
                 followers
               </p>
-              <p>
+              <p className="cursor-pointer">
                 <span className="font-semibold mx-2">
                   {userProfile?.following?.length}
                 </span>{" "}
@@ -220,7 +219,7 @@ const [Zoom, setZoom] = useState(false)
               TAGS
             </span>
           </div>
-<PostZoomDIalog Open = {Zoom} setOpen={setZoom} item={ZoomedPost} />
+<PostZoomDIalog Open = {Zoom} pfp={userProfile?.ProfilePicture} username={userProfile?.username} setOpen={setZoom} item={ZoomedPost} POSTER={userProfile} />
           <div className="grid grid-cols-3 gap-1">
             {DisplayedPosts ?.map((post) => {
               return (
