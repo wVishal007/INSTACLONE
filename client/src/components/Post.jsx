@@ -48,7 +48,7 @@ const Post = ({ post }) => {
     const FollowUnfollowHandler = async (USER) => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/user/followorUnfollow/${USER?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/followorUnfollow/${USER?._id}`,
         {},
         { withCredentials: true }
       );
@@ -68,7 +68,7 @@ const Post = ({ post }) => {
     try {
       const action = liked ? "unlike" : "like";
       const res = await axios.get(
-        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/${action}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/${post?._id}/${action}`,
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -98,7 +98,7 @@ const Post = ({ post }) => {
   const commentHandler = async () => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/comment`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/${post?._id}/comment`,
         { text: CommentText },
         {
           headers: {
@@ -132,7 +132,7 @@ const Post = ({ post }) => {
   const SavePostHandler = async () => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/post/${post?._id}/save`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/${post?._id}/save`,
         {},
         { withCredentials: true }
       );
@@ -154,7 +154,7 @@ const Post = ({ post }) => {
     try {
       // alert("deleting post")
       const res = await axios.delete(
-        `https://instaclone-sje7.onrender.com/api/v1/post/delete/${post?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/delete/${post?._id}`,
         { withCredentials: true }
       );
       if (res.data.success) {

@@ -10,7 +10,7 @@ const useGetUsersFollowing = () => {
     const fetchFollowing = async () => {
       try {
         const res = await axios.post(
-          "https://instaclone-sje7.onrender.com/api/v1/user/saved",
+          `${import.meta.env.VITE_API_URL}/api/v1/user/saved`,
           {},
           { withCredentials: true }
         );

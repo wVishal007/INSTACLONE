@@ -13,7 +13,7 @@ const SuggestedUsers = () => {
     const FollowUnfollowHandler = async (USER) => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/user/followorUnfollow/${USER?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/followorUnfollow/${USER?._id}`,
         {},
         { withCredentials: true }
       );

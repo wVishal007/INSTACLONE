@@ -30,7 +30,7 @@ const Login = () => {
     try {
       setloading(true);
       const res = await axios.post(
-        "https://instaclone-sje7.onrender.com/api/v1/user/login",
+        `${import.meta.env.VITE_API_URL}/api/v1/user/login`,
         input,
         {
           headers: {

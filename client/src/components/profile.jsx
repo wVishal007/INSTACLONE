@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import useGetUserProfile from "../hooks/useGetUserProfile ";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { AtSign, Heart, MessageCircle } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
-import { setFollowing } from "../redux/authSlice";
+import { setAuthUser, setFollowing, setSelectedUser, setSuggestedUsers } from "../redux/authSlice";
+import { setPosts, setSelectedPost } from "../redux/postSlice";
+import { setlikeNotifications } from "../redux/RTN";
 
 const Profile = () => {
   const params = useParams();
@@ -29,14 +31,16 @@ const Profile = () => {
   const FollowUnfollowHandler = async () => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/user/followorUnfollow/${userProfile?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/followorUnfollow/${
+          userProfile?._id
+        }`,
         {},
         { withCredentials: true }
       );
       if (res.data.success) {
         const updatedFollowing = Following.includes(userProfile._id)
-          ? Following.filter((id) => id !== userProfile._id) 
-          : [...Following, userProfile._id]; 
+          ? Following.filter((id) => id !== userProfile._id)
+          : [...Following, userProfile._id];
         dispatch(setFollowing(updatedFollowing));
         toast.success(res.data.message);
       }
@@ -45,11 +49,36 @@ const Profile = () => {
     }
   };
 
+  const LogOutHandler = async () => {
+      try {
+        console.log('hello')
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/user/logout`, {
+          withCredentials: true,
+        });
+        if (res.data.success) {
+          dispatch(setAuthUser(null));
+          dispatch(setSelectedPost(null));
+          dispatch(setPosts([]));
+          dispatch(setFollowing([]))
+          dispatch(setlikeNotifications([]))
+          dispatch(setSuggestedUsers([]))
+          dispatch(setSelectedUser(null))
+          Navigate("/login");
+          toast.success(res.data.message);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message);
+        
+        ;
+      }
+    };
+
   return (
     <div className="flex mx-auto w-screen md:max-w-5xl justify-center">
       <div className="flex flex-col p-20 gap-8">
         <div className="grid grid-cols-2">
-          <section className="flex justify-start md:justify-center  items-center">
+          <section className="flex flex-col gap-5 justify-start md:justify-center  items-center">
             <Avatar className="h-20 w-20 md:h-36 md:w-36">
               <AvatarImage
                 className="object-cover"
@@ -57,6 +86,7 @@ const Profile = () => {
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
+            <div onClick={LogOutHandler} className="block md:hidden cursor-pointer hover:scale-90"><Button className='bg-gray-200 text-black font-semibold rounded-lg text-sm hover:scal-90'>Logout</Button></div>
           </section>
           <section className="flex flex-col gap-5">
             <div className="flex gap-5 items-center">
@@ -181,7 +211,7 @@ const Profile = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-1">
-            {DisplayedPosts?.map((post) => {
+            {DisplayedPosts ?.map((post) => {
               return (
                 <div key={post?._id} className="cursor-pointer relative group">
                   <img

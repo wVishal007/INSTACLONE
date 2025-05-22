@@ -21,6 +21,8 @@ import { Button } from "./ui/button";
 import { setlikeNotifications } from "../redux/RTN";
 import { FaHeart } from "react-icons/fa";
 
+
+
 const Leftsidebar = () => {
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
@@ -33,8 +35,8 @@ const Leftsidebar = () => {
 
   const LogOutHandler = async () => {
     try {
-      // console.log("logging out")
-      const res = await axios.get("https://instaclone-sje7.onrender.com/api/v1/user/logout", {
+      console.log('hello')
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/user/logout`, {
         withCredentials: true,
       });
       if (res.data.success) {
@@ -49,8 +51,10 @@ const Leftsidebar = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
-      toast.error(error);
+      
+      ;
     }
   };
 

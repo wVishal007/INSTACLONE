@@ -7,6 +7,7 @@ import Messages from "./Messages";
 
 import { Button } from "./ui/button";
 import {
+  Backpack,
   MessageCircle,
   MessageCircleMore,
   MessageCircleMoreIcon,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { FaBackspace, FaBackward } from "react-icons/fa";
 
 const chatPage2 = () => {
   const [TextMessage, setTextMessage] = useState("");
@@ -27,7 +29,7 @@ const chatPage2 = () => {
   const SendMessageHandler = async (recieverID) => {
     try {
       const res = await axios.post(
-        `https://instaclone-sje7.onrender.com/api/v1/message/send/${recieverID}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/message/send/${recieverID}`,
         { message: TextMessage },
         {
           headers: {
@@ -113,17 +115,19 @@ const chatPage2 = () => {
       {SelectedUser && (
         <section className="flex flex-col flex-1 h-full px-4 py-3">
           {/* Back Button for Mobile */}
-          <div className="md:hidden mb-2">
-            <button
-              onClick={() => dispatch(setSelectedUser(null))}
-              className="text-blue-600 hover:underline text-sm font-bold mb-2"
-            >
-              ← Back to users
-            </button>
-          </div>
+       
 
           {/* Header */}
-          <div className="flex items-center border-b border-gray-300 pb-2 mb-2">
+    <div className="flex justify-between">
+         <div className="md:hidden mb-2">
+            <button
+              onClick={() => dispatch(setSelectedUser(null))}
+              className="text-blue-600 flex items-center gap-2 hover:underline text-sm font-bold mb-2"
+            >
+              <FaBackward className="w-6 h-6"/> Back to users 
+            </button>
+          </div>
+            <div className="flex items-center border-b border-gray-300 pb-2 mb-2">
             <Avatar className="mr-3">
               <AvatarImage
                 className="object-cover"
@@ -135,6 +139,7 @@ const chatPage2 = () => {
               {SelectedUser?.username}
             </span>
           </div>
+    </div>
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto">
@@ -142,12 +147,12 @@ const chatPage2 = () => {
           </div>
 
           {/* Input Field */}
-          <div className="flex items-center mt-3 border-t pt-3">
+          <div className="md:flex items-center border-t pt-3">
             <input
               value={TextMessage}
               onChange={(e) => setTextMessage(e.target.value)}
               type="text"
-              className="flex-1 border rounded-lg px-3 py-2 mr-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="flex-1 w-[85%] border rounded-lg px-3 py-2 mr-2 focus:outline-none focus:ring focus:ring-blue-300"
               placeholder="Type your message..."
             />
             <Button

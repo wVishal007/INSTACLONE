@@ -1,2 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+*{
+   transition: all 1s ease-out;
+}

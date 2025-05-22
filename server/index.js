@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
+dotenv.config({});
 import express, { urlencoded } from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
-dotenv.config({});
 import connectDB from './utils/db.js';
 import userRoute from './routes/user.route.js'
 import messageRoute from './routes/message.route.js'
@@ -30,7 +30,7 @@ app.use(urlencoded({ extended: true }));
 
 
 const corsOptions = {
-  origin: process.env.URL,
+  origin: process.env.FRONT_URL,
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -40,9 +40,6 @@ app.use(cors(corsOptions));
 
 //api incoming
 app.use('/api/v1/user' ,userRoute);
-"https://instaclone-sje7.onrender.com/v1/user/register"
-"https://instaclone-sje7.onrender.com/api/v1/user/login"
-
 app.use('/api/v1/message' ,messageRoute);
 app.use('/api/v1/post' ,postRoute);
 
