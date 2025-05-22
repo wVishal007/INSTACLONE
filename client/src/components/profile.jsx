@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { setAuthUser, setFollowing, setSelectedUser, setSuggestedUsers } from "../redux/authSlice";
 import { setPosts, setSelectedPost } from "../redux/postSlice";
 import { setlikeNotifications } from "../redux/RTN";
+import PostZoomDIalog from "./PostZoomDIalog";
 
 const Profile = () => {
   const params = useParams();
@@ -20,6 +21,7 @@ const Profile = () => {
   const { userProfile, user } = useSelector((store) => store.auth);
   const isLoggedinUser = user?._id === userProfile?._id;
   const [ActiveTab, setActiveTab] = useState("posts");
+  const navigate = useNavigate()
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -63,7 +65,7 @@ const Profile = () => {
           dispatch(setlikeNotifications([]))
           dispatch(setSuggestedUsers([]))
           dispatch(setSelectedUser(null))
-          Navigate("/login");
+          navigate("/login");
           toast.success(res.data.message);
         }
       } catch (error) {
@@ -74,6 +76,15 @@ const Profile = () => {
       }
     };
 
+
+const [Zoom, setZoom] = useState(false)
+ const [ZoomedPost, setZoomedPost] = useState({})
+
+ const PostZoomHandler = (post) =>{
+  setZoom(true)
+ setZoomedPost(post)
+ setSelectedPost(post)
+}
   return (
     <div className="flex mx-auto w-screen md:max-w-5xl justify-center">
       <div className="flex flex-col p-20 gap-8">
@@ -209,11 +220,11 @@ const Profile = () => {
               TAGS
             </span>
           </div>
-
+<PostZoomDIalog Open = {Zoom} setOpen={setZoom} item={ZoomedPost} />
           <div className="grid grid-cols-3 gap-1">
             {DisplayedPosts ?.map((post) => {
               return (
-                <div key={post?._id} className="cursor-pointer relative group">
+                <div onClick={()=>PostZoomHandler(post)} key={post?._id} className="cursor-pointer relative group">
                   <img
                     src={post?.image}
                     alt="postimage"

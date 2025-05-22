@@ -213,7 +213,7 @@ const Post = ({ post }) => {
           </DialogContent>
         </Dialog>
       </div>
-      <img
+      <img onDoubleClick={likeOrUnlikeHandler}
         className="rounded-sm object-cover aspect-square w-full my-2"
         src={post.image}
         alt=""
