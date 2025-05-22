@@ -9,13 +9,13 @@ const PostZoomDIalog = ({Open,setOpen,item}) => {
     const {SelectedPost} = useSelector(store=>store.post)
     const {user,SuggestedUsers} = useSelector(store=>store.auth)
     const POSTER = SuggestedUsers.filter((item)=>item._id == SelectedPost?.author) 
-    console.log(POSTER[0].ProfilePicture);
     
   return (
     <div>
-      <Dialog open={Open}>
+   {
+    POSTER &&    <Dialog open={Open}>
         <DialogTrigger asChild></DialogTrigger>
-        <DialogContent className='bg-white flex justify-center max-w-screen items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
+        <DialogContent className='bg-white flex justify-center max-w-screen md:scale-70 md:w-fit overflow-auto items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-2 items-center'>
                     <Avatar >
@@ -51,6 +51,7 @@ const PostZoomDIalog = ({Open,setOpen,item}) => {
             </div>
         </DialogContent>
       </Dialog>
+   }
     </div>
   )
 }

@@ -19,6 +19,7 @@ import axios from "axios";
 import { setPosts, setSelectedPost, setSavedPosts } from "../redux/postSlice";
 import useGetSavedPosts from "../hooks/useGetSavedPosts";
 import { setFollowing } from "../redux/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ post }) => {
   useGetSavedPosts();
@@ -32,6 +33,7 @@ const Post = ({ post }) => {
   const [postLikes, setpostLikes] = useState(post.likes.length);
   const [Comment, setComment] = useState([]);
   const [saved, setsaved] = useState(SavedPosts);
+  const navigate = useNavigate()
 
   const dispatch = useDispatch();
 
@@ -173,7 +175,7 @@ const Post = ({ post }) => {
     <div className="my-8 w-full max-w-3xl mx-auto px-7 md:pl-[17%]">
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
-          <Avatar>
+          <Avatar className="cursor-pointer" onClick={()=>navigate(`/profile/${post?.author?._id}`)}>
             <AvatarImage
               className="w-8 h-8 rounded-full object-cover"
               src={post.author?.ProfilePicture}
@@ -182,7 +184,7 @@ const Post = ({ post }) => {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="flex gap-3 items-center">
-            <h1>{post.author?.username}</h1>
+            <h1 className="cursor-pointer" onClick={()=>navigate(`/profile/${post?.author?._id}`)}>{post.author?.username}</h1>
             {user?._id === post?.author._id ? (<Badge>Author</Badge>):(
               Following.includes(post?.author?._id) ? (<Button className='rounded-lg text-black font-semibold mx-3 bg-gray-200' onClick={()=>FollowUnfollowHandler(post?.author)}>Unfollow</Button> ):(<Button className='rounded-lg font-semibold mx-3 bg-blue-600' onClick={()=>FollowUnfollowHandler(post?.author)}>Follow</Button>)
             )}
