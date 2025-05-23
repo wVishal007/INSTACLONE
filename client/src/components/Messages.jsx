@@ -60,8 +60,7 @@ const Messages = ({ SelectedUser }) => {
                       }
                    
                       <div className={`max-w-xs break-words rounded-lg py-1 px-2 ${msg.senderID === user?._id ? 'bg-blue-500 text-white':'bg-gray-200'} ${msg.PostMessage ? 'p-0 bg-transparent' : ''}`}>
-                        {msg.PostMessage ? <div className="flex flex-col">
-                          {/* {posts.filter((item)=>item?.image === msg.message)[0].author.username} */}
+                        {msg?.PostMessage ? <div className="flex flex-col">
                           <img className="rounded-lg h-full w-full object-cover" src={msg.PostMessage}/> 
                         </div>: msg.message }
                           

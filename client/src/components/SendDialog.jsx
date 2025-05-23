@@ -13,9 +13,10 @@ const SendDialog = ({ OpenDialog, setOpen }) => {
   const [postMessage, setpostMessage] = useState({})
   const SharePostHandler = async (USER) =>{
     try {
+      console.log(postMessage);
           const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/message/sendPost/${USER?._id}`,
-        { PostMessage: postMessage.image,message:'Check out this post' },
+        { PostMessage: SelectedPost?.image,message:'Check out this post' },
         {
           headers: {
             "Content-Type": "application/json",
