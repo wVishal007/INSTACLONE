@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-*{
-   transition: all 1s ease-out;
-   font: poppins;
+
+* {
+  transition: all 0.3s ease-out;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
 }
-/* body {
-  @apply font-poppins;
-} */

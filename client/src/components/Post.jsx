@@ -20,6 +20,7 @@ import { setPosts, setSelectedPost, setSavedPosts } from "../redux/postSlice";
 import useGetSavedPosts from "../hooks/useGetSavedPosts";
 import { setFollowing } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import SendDialog from "./SendDialog";
 
 const Post = ({ post }) => {
   useGetSavedPosts();
@@ -171,6 +172,8 @@ const Post = ({ post }) => {
       console.log(error);
     }
   };
+
+  const [OpenShareDialog, setOpenShareDialog] = useState(false)
   return (
     <div className="my-8 w-full max-w-3xl mx-auto px-7 md:pl-[17%]">
       <div className="flex justify-between">
@@ -242,7 +245,12 @@ const Post = ({ post }) => {
             }}
             className="cursor-pointer hover:text-pink-400"
           />
-          <Send className="cursor-pointer hover:text-pink-400" />
+          <Send onClick={()=>{
+            setOpenShareDialog(true)
+            dispatch(setSelectedPost(post))
+
+          }} className="cursor-pointer hover:text-pink-400" />
+            <SendDialog OpenDialog={OpenShareDialog} setOpen={setOpenShareDialog}/>
         </div>
         <div>
           {" "}

@@ -12,7 +12,7 @@ const PostZoomDIalog = ({Open,setOpen,item,POSTER}) => {
       {
      <Dialog open={Open}>
         <DialogTrigger asChild></DialogTrigger>
-        <DialogContent className='bg-white flex  justify-center w-screen max-w-screen md:scale-70 items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
+        <DialogContent className='bg-white flex  justify-center w-fit max-w-screen md:scale-70 items-center p-2 rounded-lg' onInteractOutside={()=>setOpen(false)}>
             <div className='flex flex-col gap-4'>
          <div className='flex justify-between'>
                    <div className='flex gap-2 items-center'>
@@ -29,7 +29,7 @@ const PostZoomDIalog = ({Open,setOpen,item,POSTER}) => {
                 </div>
                  <button onClick={()=>setOpen(false)} className='justify-end mr-3 cursor-pointer hover:font-bold'><X/></button>
          </div>
-                <img className='object-cover w-screen rounded-lg' src={item?.image} alt="" />
+                <img className='object-cover rounded-lg' src={item?.image} alt="" />
                 <div className='flex gap-3'>
                     {
                         item?.likes?.includes(user?._id) ? (<span className='flex gap-1'><FaHeart className='w-6 h-6 text-red-600'/>{item?.likes?.length > 0 && item?.likes?.length} likes</span>):(<span className='flex gap-1'><Heart/>{item?.likes?.length > 0 && item?.likes?.length} likes</span>)

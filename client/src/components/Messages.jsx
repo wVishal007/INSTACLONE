@@ -9,8 +9,14 @@ import usegetRealtimeMsgs from "../hooks/usegetRealtimeMsgs";
 const Messages = ({ SelectedUser }) => {
   const {chatMessages} = useSelector(store=>store.chat)
   const {user} =useSelector(store=>store.auth)
+  const {posts} = useSelector(store=>store.post)
   usegetAllMessages()
    usegetRealtimeMsgs()
+
+// const PhotoCheck = async(msg) =>{
+//  const urlPattern = /https://res.cloudinary.com;
+//    return await urlPattern.test(msg)
+// }   
   
   return (
     <div className="overflow-y-auto flex-1 p-4">
@@ -53,8 +59,12 @@ const Messages = ({ SelectedUser }) => {
                       </Avatar>)
                       }
                    
-                      <div className={`max-w-xs break-words rounded-lg py-1 px-2 ${msg.senderID === user?._id ? 'bg-blue-500 text-white':'bg-gray-200'}`}>
-                          {msg.message}
+                      <div className={`max-w-xs break-words rounded-lg py-1 px-2 ${msg.senderID === user?._id ? 'bg-blue-500 text-white':'bg-gray-200'} ${msg.PostMessage ? 'p-0 bg-transparent' : ''}`}>
+                        {msg.PostMessage ? <div className="flex flex-col">
+                          {/* {posts.filter((item)=>item?.image === msg.message)[0].author.username} */}
+                          <img className="rounded-lg h-full w-full object-cover" src={msg.PostMessage}/> 
+                        </div>: msg.message }
+                          
                       </div>
                </div>
                     </div>

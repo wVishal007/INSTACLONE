@@ -133,7 +133,9 @@ setZoom(true)
                   >
                     Unfollow
                   </Button>
-                  <Button
+                  <Button onClick={()=>{navigate(`/chat/`)
+                    dispatch(setSelectedUser(userProfile))
+                  }}
                     variant="secondary"
                     className="h-8 hover:bg-gray-100 bg-gray-200 font-semibold"
                   >
