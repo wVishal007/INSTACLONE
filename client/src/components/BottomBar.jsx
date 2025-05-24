@@ -1,4 +1,4 @@
-import { Heart, Home, MessageCircleMore, PlusSquare } from "lucide-react";
+import { Heart, Home, MessageCircleMore, PlusSquare, Search } from "lucide-react";
 import React, { useState,useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ useEffect(()=>{
         <div onClick={()=>setOpen(true)} className="cursor-pointer"><PlusSquare/>
         <CreatePostDialog open={open} setOpen={setOpen} />
         </div>
+        <div onClick={()=>navigate('/Search')} className="cursor-pointer"><Search/></div>
         <div onClick={()=>navigate(`/profile/${user?._id}`)} className="flex gap-2 font-bold cursor-pointer">
           <Avatar className="w-10 h-10">
             <AvatarImage className="object-cover" src={user?.profilePicture} />

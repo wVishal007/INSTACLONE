@@ -12,6 +12,7 @@ const User = user
 
 export const register = async (req,res)=>{
     try{
+        
         const {username,email,password} = req.body;
 
         if(!username || !email || !password){

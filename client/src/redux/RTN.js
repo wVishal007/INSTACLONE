@@ -5,6 +5,7 @@ const RtnSlice = createSlice({
     name:'RTN',
     initialState:{
         likeNotifications:[],
+        commentNotifications:[]
 
     },reducers:{
         setlikeNotifications:(state,action)=>{
@@ -13,9 +14,12 @@ const RtnSlice = createSlice({
             } else if(action.payload.type==='dislike'){
                 state.likeNotifications = state.likeNotifications.filter((item)=>item.userID !== action.payload.userID)
             }
+        },
+        setCommentNotification:(state,action)=>{
+             state.commentNotifications.unshift(action.payload);
         }
     }
 })
 
-export const {setlikeNotifications} = RtnSlice.actions;
+export const {setlikeNotifications,setCommentNotification} = RtnSlice.actions;
 export default RtnSlice.reducer;

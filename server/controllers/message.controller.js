@@ -88,12 +88,59 @@ export const getMessage = async (req, res) => {
     }
 };
 
+// export const SendPostMessage = async (req, res) => {
+//     try {
+//         const senderID = req.id;
+//         const recieverID = req.params.id;
+//         const { PostMessage } = req.body;
+//         const { message } = req.body;
+        
+
+//         let Conversation = await conversation.findOne({
+//             participants: { $all: [senderID, recieverID] }
+//         })
+
+//         if (!Conversation) {
+//             Conversation = await conversation.create({
+//                 participants: [senderID, recieverID]
+//             })
+//         }
+
+//         const newPostMessage = await Message.create({
+//             senderID,
+//             recieverID,
+//             PostMessage,
+//             message
+//         })
+//         if(newPostMessage){
+//             await Conversation.messages.push(newPostMessage._id)
+
+//         }
+        
+//         await Promise.all([Conversation.save(),newPostMessage.save()]);
+
+//         const recieverSocketID = getRecieverSocketID(recieverID)
+//         if(recieverSocketID){
+//             io.to(recieverSocketID).emit('newPostMessage',newPostMessage)
+//         }
+
+//         return res.status(200).json({
+//             newPostMessage,
+//             success:true,
+//             confirmation:'message sent'
+//         })
+
+        
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
 export const SendPostMessage = async (req, res) => {
     try {
         const senderID = req.id;
         const recieverID = req.params.id;
-        const { PostMessage } = req.body;
-        const { message } = req.body;
+        const { PostMessage,message } = req.body;
         
 
         let Conversation = await conversation.findOne({
@@ -118,6 +165,7 @@ export const SendPostMessage = async (req, res) => {
         }
         
         await Promise.all([Conversation.save(),newPostMessage.save()]);
+        const SharedPost = await Message.findById(newPostMessage?._id).populate('PostMessage')
 
         const recieverSocketID = getRecieverSocketID(recieverID)
         if(recieverSocketID){
@@ -126,6 +174,7 @@ export const SendPostMessage = async (req, res) => {
 
         return res.status(200).json({
             newPostMessage,
+            SharedPost,
             success:true,
             confirmation:'message sent'
         })

@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 
 const Signup = () => {
+  
+  
   const navigate = useNavigate();
   const {user} = useSelector(store=>store.auth)
   const [input, setinput] = useState({
@@ -17,6 +19,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
+  console.log(input);
 
   const [loading, setloading] = useState(false);
 
@@ -30,7 +34,7 @@ const Signup = () => {
     try {
       setloading(true);
       const res = await axios.post(
-        `${process.env.URL}.com/api/v1/user/register`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/register`,
         input,
         {
           headers: {

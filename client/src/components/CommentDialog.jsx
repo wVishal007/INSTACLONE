@@ -71,10 +71,10 @@ const CommentDialog = ({ openComments, setopenComments }) => {
     <Dialog open={openComments}>
       <DialogContent
         onInteractOutside={() => setopenComments(false)}
-        className="flex flex-col w-screen md:w-[200%] p-0 bg-white"
+        className="flex flex-col md:max-w-5xl mx-auto w-screen md:w-[200%] p-0 bg-white"
       >
         <div className="flex flex-1">
-          <div className="w-1/2">
+          <div className="w-fit hidden md:block">
             {" "}
             <img
               className="w-full h-full rounded-l-lg object-cover"
@@ -82,7 +82,7 @@ const CommentDialog = ({ openComments, setopenComments }) => {
               alt=""
             />
           </div>
-          <div className="flex w-1/2 flex-col justify-between">
+          <div className="flex w-full flex-col justify-between">
             <div className="flex justify-between p-4">
               <div className="flex gap-3 items-center">
                 <Link>

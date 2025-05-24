@@ -12,6 +12,9 @@ const usegetRealtimeMsgs = ()=>{
 socket?.on('newMessage',(newMessage)=>{
     dispatch(setMessages([...chatMessages,newMessage]))
 })
+socket?.on('newPostMessage',(newPostMessage)=>{
+    dispatch(setMessages([...chatMessages,newPostMessage]))
+})
 return ()=>{
     socket?.off('newMessage')
 }

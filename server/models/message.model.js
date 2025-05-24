@@ -11,7 +11,7 @@ const messageSchema = new mongoose.Schema({
         type:String,required:true
     },
     PostMessage:{
-        type:String,required:false
+          type:mongoose.Schema.Types.ObjectId,ref:'Post'
     }
 });
 

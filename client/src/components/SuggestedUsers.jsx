@@ -18,7 +18,7 @@ const SuggestedUsers = () => {
         { withCredentials: true }
       );
       if (res.data.success) {
-        const updatedFollowing = Following.includes(USER._id)
+        const updatedFollowing = Following?.includes(USER._id)
           ? Following.filter((id) => id !== USER._id) 
           : [...Following, USER._id]; 
         dispatch(setFollowing(updatedFollowing));
@@ -64,7 +64,7 @@ const SuggestedUsers = () => {
               </div>
             </div>
             {
-              Following.includes(user?._id) ? (<button onClick={()=>FollowUnfollowHandler(user)} className="text-sm font-bold cursor-pointer text-blue-500 hover:text-blue-600 transition">Unfollow</button>):(<button onClick={()=>FollowUnfollowHandler(user)} className="text-sm font-bold cursor-pointer text-blue-500 hover:text-blue-600 transition">Follow</button>)
+              Following?.includes(user?._id) ? (<button onClick={()=>FollowUnfollowHandler(user)} className="text-sm font-bold cursor-pointer text-blue-500 hover:text-blue-600 transition">Unfollow</button>):(<button onClick={()=>FollowUnfollowHandler(user)} className="text-sm font-bold cursor-pointer text-blue-500 hover:text-blue-600 transition">Follow</button>)
             }
           </div>
         ))

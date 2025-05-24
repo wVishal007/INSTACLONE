@@ -12,7 +12,7 @@ const CommentBar = ({Comment}) => {
         <AvatarImage className='rounded-full w-6 h-6 object-cover' src={Comment.author.ProfilePicture} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-      <h1 className='font-bold text-sm'>{Comment?.author.username} <span className='font-normal pl-1'>{Comment?.text}</span></h1>
+      <h1 className='font-semibold text-xs'>{Comment?.author.username} <span className='font-normal text-sm mx-2 pl-1'>{Comment?.text}</span></h1>
       </div>
       <hr className='border-gray-200 my-1' />
     </div>

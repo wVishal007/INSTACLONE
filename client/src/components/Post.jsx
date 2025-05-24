@@ -22,7 +22,14 @@ import { setFollowing } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import SendDialog from "./SendDialog";
 
-const Post = ({ post }) => {
+const Post = ({ post,Show = false }) => {
+   if (!post) {
+    return (
+      <div className="p-4 text-red-500 font-semibold">
+        Post not found or has been deleted.
+      </div>
+    );
+  }
   useGetSavedPosts();
   const [CommentText, setCommentText] = useState("");
   const [openComments, setopenComments] = useState(false);
@@ -175,7 +182,7 @@ const Post = ({ post }) => {
 
   const [OpenShareDialog, setOpenShareDialog] = useState(false)
   return (
-    <div className="my-8 w-full max-w-3xl mx-auto px-7 md:pl-[17%]">
+    <div className={`my-4 w-full ${Show ? "max-w-[90%]  max-h-[90%] px-4" : "max-w-3xl px-7 md:pl-[17%]"} mx-auto`}>
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <Avatar className="cursor-pointer" onClick={()=>navigate(`/profile/${post?.author?._id}`)}>
@@ -219,7 +226,7 @@ const Post = ({ post }) => {
         </Dialog>
       </div>
       <img onDoubleClick={likeOrUnlikeHandler}
-        className="rounded-sm object-cover aspect-square w-full my-2"
+        className={`rounded-sm object-cover aspect-square w-full my-2 ${Show ? 'max-h-[400px]':''}`}
         src={post.image}
         alt=""
       />

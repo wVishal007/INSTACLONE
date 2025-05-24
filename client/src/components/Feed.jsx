@@ -3,7 +3,7 @@ import Posts from './Posts'
 
 const Feed = () => {
   return (
-    <div className='overflow-y-auto md:h-full'>
+    <div className='overflow-y-auto mx-auto md:h-full'>
       <Posts/>
     </div>
   )

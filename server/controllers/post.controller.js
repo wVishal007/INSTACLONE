@@ -5,7 +5,6 @@ import { user } from "../models/user.model.js";
 import { comment } from "../models/comment.model.js";
 import { getRecieverSocketID,io } from '../socket/socket.js';
 
-
 export const addNewPost = async (req, res) => {
     try {
         const {caption} = req.body;
@@ -185,6 +184,22 @@ export const addComment = async (req,res) =>{
 
         post.comments.push(Comment._id)
         await post.save()
+
+        
+        const User = await user.findById(commenter).select('username ProfilePicture')
+        const PostOwnerID = post.author.toString()
+           if(PostOwnerID !== commenter){
+            const notification = {
+                type:'comment',
+                userID:commenter,
+                userDetails:User,
+                postID,
+                message:'Someone commented on your post'
+            }
+            const PostOwnerSocketID = getRecieverSocketID(PostOwnerID)
+            io.to(PostOwnerSocketID).emit('CommentNotification',notification)
+        }
+
 
 return res.status(201).json({
     message:"comment posted",

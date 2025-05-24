@@ -11,11 +11,12 @@ import { io } from 'socket.io-client'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSocket } from './redux/socketSlice'
 import { setOnlineUsers } from './redux/chatSlice'
-import { setlikeNotifications } from './redux/RTN'
+import { setCommentNotification, setlikeNotifications } from './redux/RTN'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import ChatWindow from './components/ChatWindow'
 import '../src/index.css'
 import NotificationPage from './components/NotificationPage'
+import Search from './components/Search'
 
 const browserRouter = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const browserRouter = createBrowserRouter([
      {
       path:'/notifications',
       element:<ProtectedRoutes><NotificationPage/></ProtectedRoutes>
+    },
+     {
+      path:'/Search',
+      element:<ProtectedRoutes><Search/></ProtectedRoutes>
     }
 
   ]
@@ -73,6 +78,9 @@ socketio.on('getOnlineUsers',(onlineUsers)=>{
 
 socketio.on('notification',(notification)=>{
   dispatch(setlikeNotifications(notification))
+})
+socketio.on('CommentNotification',(notification)=>{
+  dispatch(setCommentNotification(notification))
 })
 
 return ()=>{

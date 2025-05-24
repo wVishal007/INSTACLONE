@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { setSelectedUser } from "../redux/authSlice";
@@ -7,16 +7,15 @@ import Messages from "./Messages";
 
 import { Button } from "./ui/button";
 import {
-  MessageCircle,
+  Image,
   MessageCircleMore,
-  MessageCircleMoreIcon,
-  MoreHorizontal,
   Send,
 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 
 const ChatPage = () => {
+  const inputRef = useRef()
   const [TextMessage, setTextMessage] = useState("");
   const { user, SuggestedUsers, SelectedUser } = useSelector(
     (store) => store.auth
@@ -116,7 +115,7 @@ const ChatPage = () => {
           </div>
           Messages comming....
           <Messages SelectedUser={SelectedUser} />
-          <div className="p-4 border-t border-t-gray-300 flex items-center">
+          <div className="p-4 gap-3 border-t border-t-gray-300 flex items-center">
             <input
               value={TextMessage}
               onChange={(e) => setTextMessage(e.target.value)}
@@ -124,6 +123,8 @@ const ChatPage = () => {
               className="flex-1 focus-visible:ring-transparent mr-2 border border-1/4 h-15 rounded-xl px-2"
               placeholder="type your message here"
             />
+            <input ref={inputRef} className="hidden" type="file" />
+            <Button onClick={()=>inputRef.current.click()} className='cursor-pointer'><Image className="text-black font-bold bg-white"/></Button>
             <Button
               onClick={() => SendMessageHandler(SelectedUser?._id)}
               className="bg-blue-700 hover:scale-90"

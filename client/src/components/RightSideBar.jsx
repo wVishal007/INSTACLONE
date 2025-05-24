@@ -7,7 +7,7 @@ import SuggestedUsers from './SuggestedUsers'
 function RightSideBar() {
   const { user } = useSelector((store) => store.auth)
   return (
-    <div className="w-full hidden md:block max-w-xs mx-auto px-4">
+    <div className="w-full hidden md:block max-w-sm mx-auto px-4">
       {/* Current User Info */}
       <div className="flex items-center gap-4 mt-10 mb-6">
         <Link to={`/profile/${user?._id}`}>
