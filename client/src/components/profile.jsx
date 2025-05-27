@@ -96,7 +96,9 @@ setZoom(true)
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <div onClick={LogOutHandler} className="block md:hidden cursor-pointer hover:scale-90"><Button className='bg-gray-200 text-black font-semibold rounded-lg text-sm hover:scal-90'>Logout</Button></div>
+           {
+            user?._id === userProfile?._id &&  <div onClick={LogOutHandler} className="block md:hidden cursor-pointer hover:scale-90"><Button className='bg-gray-200 text-black font-semibold rounded-lg text-sm hover:scal-90'>Logout</Button></div>
+           }
           </section>
           <section className="flex flex-col gap-5">
             <div className="flex gap-5 items-center">

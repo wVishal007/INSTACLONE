@@ -197,8 +197,12 @@ export const addComment = async (req,res) =>{
                 message:'Someone commented on your post'
             }
             const PostOwnerSocketID = getRecieverSocketID(PostOwnerID)
+             console.log(PostOwnerSocketID);
+             console.log('-------------------PostOwnerSocketID-----------------------');
             io.to(PostOwnerSocketID).emit('CommentNotification',notification)
         }
+       
+        
 
 
 return res.status(201).json({

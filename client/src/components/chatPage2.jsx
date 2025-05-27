@@ -66,7 +66,7 @@ const chatPage2 = () => {
             {user?.username}
           </h1>
           <hr className="border-gray-400 mb-4" />
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-auto pb-4">
             {SuggestedUsers.map((SuggestedUser) => {
               const isOnline = onlineUsers.includes(SuggestedUser?._id);
               return (

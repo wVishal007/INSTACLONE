@@ -93,7 +93,8 @@ User = {
     followers: User.followers,
     following: User.following,
     posts: User.posts,
-    saved:User.saved
+    saved:User.saved,
+    stories:User.stories
 }
 
 
