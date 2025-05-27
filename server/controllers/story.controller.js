@@ -34,7 +34,8 @@ export const addStory = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "story uploaded Successfully"
+            message: "story uploaded Successfully",
+            story
         })
 
     } catch (error) {

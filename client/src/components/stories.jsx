@@ -90,6 +90,7 @@ const Stories = () => {
         }
       );
       toast.success('Story uploaded successfully!');
+      dispatch(setmyStories([res.data.story,...myStories]))
       setOpen(false);
       setPreview(null);
       setImage(null);
@@ -201,7 +202,7 @@ const openUserStory = () => {
                 />
                 <button
                   onClick={() => fileInputRef.current.click()}
-                  className="w-full rounded-full py-2 mb-2 bg-blue-500 text-white rounded-md hover:bg-pink-600 transition font-medium"
+                  className="w-full py-2 mb-2 bg-blue-500 text-white rounded-md hover:bg-pink-600 transition font-medium"
                   disabled={uploading}
                 >
                   Choose Image
