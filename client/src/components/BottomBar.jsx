@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import CreatePostDialog from "./CreatePostDialog";
+import CreatePostVsStory from "./CreatePostVsStory";
 
 const BottomBar = () => {
   const { user } = useSelector((store) => store.auth);
@@ -21,7 +22,9 @@ useEffect(()=>{
       <div className="flex px-10 mt-2 items-center justify-between border-t border-t-gray-300 p-2">
         <div onClick={()=>navigate('/')} className="font-bold text-xl cursor-pointer"><Home/></div>
         <div onClick={()=>setOpen(true)} className="cursor-pointer"><PlusSquare/>
-        <CreatePostDialog open={open} setOpen={setOpen} />
+        <span className="hidden">
+       <CreatePostVsStory open={open} setOpen={setOpen} />
+     </span>
         </div>
         <div onClick={()=>navigate('/Search')} className="cursor-pointer"><Search/></div>
         <div onClick={()=>navigate(`/profile/${user?._id}`)} className="flex gap-2 font-bold cursor-pointer">

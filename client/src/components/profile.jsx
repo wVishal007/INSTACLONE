@@ -8,10 +8,11 @@ import { Badge } from "./ui/badge";
 import { AtSign, Heart, MessageCircle } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
-import { setAuthUser, setFollowing, setSelectedUser, setSuggestedUsers } from "../redux/authSlice";
-import { setPosts, setSelectedPost } from "../redux/postSlice";
-import { setlikeNotifications } from "../redux/RTN";
+import { setAuthUser, setFollowing, setmyStories, setSelectedUser, setStories, setSuggestedUsers, setuserProfile } from "../redux/authSlice";
+import { setPosts, setSavedPosts, setSelectedPost } from "../redux/postSlice";
+import { setCommentNotification, setlikeNotifications } from "../redux/RTN";
 import PostZoomDIalog from "./PostZoomDIalog";
+import { setMessages, setOnlineUsers } from "../redux/chatSlice";
 
 const Profile = () => {
   const params = useParams();
@@ -58,13 +59,20 @@ const Profile = () => {
           withCredentials: true,
         });
         if (res.data.success) {
-          dispatch(setAuthUser(null));
-          dispatch(setSelectedPost(null));
-          dispatch(setPosts([]));
-          dispatch(setFollowing([]))
-          dispatch(setlikeNotifications([]))
-          dispatch(setSuggestedUsers([]))
-          dispatch(setSelectedUser(null))
+                  dispatch(setAuthUser(null));
+                  dispatch(setSelectedPost(null));
+                  dispatch(setPosts([]));
+                  dispatch(setFollowing([]))
+                  dispatch(setlikeNotifications([]))
+                  dispatch(setSuggestedUsers([]))
+                  dispatch(setSelectedUser(null))
+                  dispatch(setCommentNotification([]))
+                  dispatch(setStories([]))
+                  dispatch(setmyStories([]))
+                  dispatch(setOnlineUsers([]))
+                  dispatch(setMessages([]))
+                  dispatch(setuserProfile(null))
+                  dispatch(setSavedPosts([]))
           navigate("/login");
           toast.success(res.data.message);
         }

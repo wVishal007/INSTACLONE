@@ -8,7 +8,7 @@ const authSlice = createSlice({
         userProfile:null,
         SelectedUser:null,
         Following:[],
-        myStories:null,
+        myStories:[],
         Stories:[]
 
     },

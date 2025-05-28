@@ -13,13 +13,15 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthUser,setFollowing,setSelectedUser,setSuggestedUsers } from "../redux/authSlice";
+import { setAuthUser,setFollowing,setmyStories,setSelectedUser,setStories,setSuggestedUsers, setuserProfile } from "../redux/authSlice";
 import CreatePostDialog from "./CreatePostDialog";
-import { setPosts, setSelectedPost } from "../redux/postSlice";
+import { setPosts, setSavedPosts, setSelectedPost } from "../redux/postSlice";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { setlikeNotifications } from "../redux/RTN";
+import { setCommentNotification, setlikeNotifications } from "../redux/RTN";
 import { FaHeart } from "react-icons/fa";
+import { setMessages, setOnlineUsers } from "../redux/chatSlice";
+import CreatePostVsStory from "./CreatePostVsStory";
 
 
 
@@ -47,6 +49,13 @@ const Leftsidebar = () => {
         dispatch(setlikeNotifications([]))
         dispatch(setSuggestedUsers([]))
         dispatch(setSelectedUser(null))
+        dispatch(setCommentNotification([]))
+        dispatch(setStories([]))
+        dispatch(setmyStories([]))
+        dispatch(setOnlineUsers([]))
+        dispatch(setMessages([]))
+        dispatch(setuserProfile(null))
+        dispatch(setSavedPosts([]))
         navigate("/login");
         toast.success(res.data.message);
       }
@@ -96,7 +105,7 @@ const Leftsidebar = () => {
   return (
     <div className="fixed hidden md:block  border-r border-gray-500 top-0 z-10 left-0 px-4 w-[16%] h-screen">
       <div className="flex flex-col gap-3">
-        <h1 className="font-bold font-mono text-4xl flex gap-1 my-1">FUN<FaHeart className="text-red-500"/> APP</h1>
+        <h1 className="font-bold font-mono text-4xl flex gap-1 my-1">Connect<FaHeart className="text-red-500"/> :)</h1>
         {SideBarItems.map((items, index) => {
           return (
             <div
@@ -150,7 +159,9 @@ const Leftsidebar = () => {
           );
         })}
       </div>
-      <CreatePostDialog open={open} setOpen={setOpen} />
+     <span className="hidden">
+       <CreatePostVsStory open={open} setOpen={setOpen} />
+     </span>
     </div>
   );
 };

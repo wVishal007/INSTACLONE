@@ -19,9 +19,9 @@ const Navbar = () => {
     navigate("/notifications");
   };
 
-  useEffect(() => {
-    const HideNavbar = location.pathname === "/chat";
-  }, [navigate]);
+  // useEffect(() => {
+  //   const HideNavbar = location.pathname === "/chat";
+  // }, [navigate]);
 
   return (
     <div className="block md:hidden">
@@ -30,7 +30,7 @@ const Navbar = () => {
           HideNavbar ? "hidden" : "flex"
         }`}
       >
-        <div className="font-bold text-xl">Diary</div>
+        <div className="font-bold text-xl">by Vishu</div>
         <div className="flex gap-4 items-center font-bold relative">
           
           {/* Likes */}

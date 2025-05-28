@@ -4,7 +4,6 @@ import { Post } from "../models/post.model.js";
 import { user } from "../models/user.model.js";
 import { comment } from "../models/comment.model.js";
 import { getRecieverSocketID,io } from '../socket/socket.js';
-
 export const addNewPost = async (req, res) => {
     try {
         const {caption} = req.body;
@@ -112,6 +111,7 @@ export const likePost = async (req, res) => {
             }
             const PostOwnerSocketID = getRecieverSocketID(PostOwnerID)
             io.to(PostOwnerSocketID).emit('notification',notification)
+               console.log(PostOwnerSocketID);
         }
 
         return res.status(200).json({
@@ -147,6 +147,8 @@ export const unLikePost = async (req, res) => {
             }
             const PostOwnerSocketID = getRecieverSocketID(PostOwnerID)
             io.to(PostOwnerSocketID).emit('notification',notification)
+         
+            
         }
 return res.status(200).json({
     message:"post unliked",

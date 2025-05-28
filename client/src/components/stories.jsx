@@ -10,7 +10,7 @@ import StoryViewer from './StoryViewer.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Stories = () => {
-  const { user, Stories = [],myStories=[] } = useSelector((store) => store.auth);
+  const { user, Stories = [],myStories=[],SuggestedUsers } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const location = useLocation()
   const navigate = useNavigate()
@@ -28,7 +28,7 @@ const Stories = () => {
     const HideStory = location.pathname === "/";
   }, [navigate]);
 
-  const hasStory = user?.stories?.length > 0;
+  let hasStory = myStories.length > 0;
   useEffect(() => {
     const getStories = async () => {
       try {
@@ -55,7 +55,6 @@ const Stories = () => {
         );
         if (res.data.success) {
           dispatch(setmyStories(res.data.data));
-          console.log(res.data.data);
           
         }
       } catch (error) {
@@ -124,6 +123,19 @@ const openUserStory = () => {
     setShowViewer(true);
   };
 
+  useEffect(()=>{
+    let testAraay = []
+Stories.forEach(story => {
+  if(story.author._id === user?._id){
+    testAraay.push(story)
+  }
+});
+if (testAraay.length == 0 ){dispatch(setmyStories([]))}
+  },[])
+
+  useEffect(()=>{
+hasStory = Stories.length > 0
+  },[])
   return (
     <div className={`w-full md:pl-[17%] px-4 py-2 bg-white rounded-xl shadow-sm mb-4 ${HideStory ? 'block':'hidden'}`}>
       <div className="md:flex hidden items-center justify-between mb-3">
@@ -237,7 +249,7 @@ const openUserStory = () => {
         )}
 
         {/* Stories of Other Users */}
-        {Stories.map((story) => (
+        { Stories.filter((story)=>story?._id != user?._id).length > 0 ? (Stories.map((story) => (
           <div
             key={story._id}
             onClick={() => openOtherStory(story)}
@@ -257,7 +269,31 @@ const openUserStory = () => {
               {story.author?.username}
             </span>
           </div>
-        ))}
+        ))):(<div className='flex justify-center items-center gap-2'>
+          {/* <span>users</span> */}
+{
+  SuggestedUsers.map((item)=>{
+          return (
+            <div onClick={()=>navigate(`profile/${item?._id}`)} className='flex flex-col' key={item?._id}>
+                <Avatar.Root className="w-14 h-14 relative">
+              <Avatar.Image
+                src={item?.ProfilePicture}
+                alt={item?.username}
+                className="w-full h-full rounded-full object-cover p-0.5 hover:scale-105 transition-transform"
+              />
+              <Avatar.Fallback className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-sm">
+                {item.username?.[0]?.toUpperCase()}
+              </Avatar.Fallback>
+            </Avatar.Root>
+            <span className="text-xs mt-1 truncate max-w-[56px]">
+              {item.username}
+            </span>
+
+            </div>
+          )
+        })
+}
+        </div>)}
       </div>
     </div>
   );
