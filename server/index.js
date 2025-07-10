@@ -31,7 +31,7 @@ app.use(urlencoded({ extended: true }));
 
 
 const corsOptions = {
-  origin: process.env.FRONT_URL,
+  origin: [process.env.FRONT_URL,process.env.FRONT_URL2],
   credentials: true,
   optionSuccessStatus: 200,
 };
