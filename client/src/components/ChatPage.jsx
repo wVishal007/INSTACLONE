@@ -1,146 +1,170 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { setSelectedUser } from "../redux/authSlice";
 import { setMessages } from "../redux/chatSlice";
 import Messages from "./Messages";
-
 import { Button } from "./ui/button";
-import {
-  Image,
-  MessageCircleMore,
-  Send,
-} from "lucide-react";
+import { Image as ImageIcon, MessageCircleMore, Send, Search } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 
 const ChatPage = () => {
-  const inputRef = useRef()
+  const inputRef = useRef();
   const [TextMessage, setTextMessage] = useState("");
-  const { user, SuggestedUsers, SelectedUser } = useSelector(
-    (store) => store.auth
-  );
+  const { user, SuggestedUsers, SelectedUser } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const { onlineUsers, chatMessages } = useSelector((store) => store.chat);
 
   const SendMessageHandler = async (recieverID) => {
+    if (!TextMessage.trim()) return;
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/message/send/${recieverID}`,
         { message: TextMessage },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
       if (res.data.success) {
         dispatch(setMessages([...chatMessages, res.data.newMessage]));
         setTextMessage("");
-        // toast.success(res.data.confirmation)
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error sending message");
     }
   };
 
+  // Cleanup on unmount
   useEffect(() => {
-    return () => {
-      setSelectedUser(null);
-    };
-  });
+    return () => dispatch(setSelectedUser(null));
+  }, [dispatch]);
 
   return (
-    <div className="flex md:ml-[20%] h-screen">
-      <section className="w-full md:w-1/4 my-8">
-        <h1
-          onClick={() => dispatch(setSelectedUser(""))}
-          className="font-bold text-xl mb-4 px-3 cursor-pointer hover:text-blue-700"
-        >
-          {user?.username}
-        </h1>
-        <hr className="border-gray-400 mb-4" />
-        <div className="overflow-y-auto h-[80vh]">
-          {SuggestedUsers.map((SuggestedUser) => {
-            const isOnline = onlineUsers.includes(SuggestedUser?._id);
+    // md:ml-[18%] ensures it doesn't overlap your fixed sidebar
+    <div className="flex md:ml-[18%] lg:ml-[16%] h-screen bg-[#050505] text-white overflow-hidden">
+      
+      {/* LEFT PANEL: User List */}
+      <section className="w-full md:w-[350px] lg:w-[400px] flex flex-col border-r border-white/5 bg-[#050505]">
+        <div className="p-6">
+          <h1 
+            onClick={() => dispatch(setSelectedUser(null))}
+            className="font-black text-2xl tracking-tighter cursor-pointer hover:text-red-500 transition-colors"
+          >
+            Messages
+          </h1>
+          <div className="relative mt-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 size-4" />
+            <input 
+              type="text" 
+              placeholder="Search chat..." 
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-red-500/50 transition-all"
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-2 space-y-1 scrollbar-hide">
+          {SuggestedUsers.map((item) => {
+            const isOnline = onlineUsers.includes(item?._id);
+            const isSelected = SelectedUser?._id === item?._id;
             return (
               <div
-                key={SuggestedUser?._id}
-                onClick={() => dispatch(setSelectedUser(SuggestedUser))}
-                className="flex gap-3 bg-gray-50 my-1 rounded-lg px-2 items-center hover:bg-gray-50 cursor-pointer"
+                key={item?._id}
+                onClick={() => dispatch(setSelectedUser(item))}
+                className={`flex gap-3 p-3 rounded-2xl items-center cursor-pointer transition-all duration-300 ${
+                  isSelected ? "bg-white/10 shadow-xl" : "hover:bg-white/5"
+                }`}
               >
-                <div className="flex my-2 justify-between">
-                  <Avatar className="mr-4 w-14 h-14">
-                    <AvatarImage
-                      className="object-cover"
-                      src={SuggestedUser?.ProfilePicture}
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
+                <div className="relative">
+                  <Avatar className="w-12 h-12 border border-white/10">
+                    <AvatarImage className="object-cover" src={item?.ProfilePicture} />
+                    <AvatarFallback>{item?.username?.charAt(0)}</AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col">
-                    <span className="font-bold flex justify-start">
-                      {SuggestedUser?.username}
-                    </span>
-                    <span
-                      className={`text-xs font-bold ${
-                        isOnline ? "text-green-600" : "text-red-500"
-                      }`}
-                    >
-                      {isOnline ? "Online" : "Offline"}
-                    </span>
-                    {chatMessages
-                      ?.filter((msg) => msg.senderID === SuggestedUser?._id)
-                      .map((msg, index) => (
-                        <span className="text-xs font-semibold text-gray-600" key={index}>{msg.message}</span>
-                      ))}
-                  </div>
+                  {isOnline && (
+                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#050505] rounded-full" />
+                  )}
+                </div>
+                
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <span className="font-bold text-sm truncate">{item?.username}</span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${isOnline ? "text-green-500" : "text-gray-600"}`}>
+                    {isOnline ? "Active Now" : "Offline"}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
       </section>
+
+      {/* RIGHT PANEL: Chat Area */}
       {SelectedUser ? (
-        <section className="flex-1 border-l border-l-gray-300 flex flex-col h-full px-5 mx-5">
-          <div className=" pt-3 pb-2 border-b border-b-gray-300 flex items-center font-semibold">
-            <Avatar className="mr-4">
-              <AvatarImage
-                className="object-cover"
-                src={SelectedUser?.ProfilePicture}
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <span>{SelectedUser?.username}</span>
+        <section className="flex-1 flex flex-col h-full bg-[#080808]">
+          {/* Header */}
+          <div className="p-4 border-b border-white/5 backdrop-blur-md bg-[#050505]/50 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10 border border-white/10">
+                <AvatarImage className="object-cover" src={SelectedUser?.ProfilePicture} />
+                <AvatarFallback>{SelectedUser?.username?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="font-bold text-sm">{SelectedUser?.username}</span>
+                <span className="text-[10px] text-green-500 font-bold uppercase">Online</span>
+              </div>
+            </div>
           </div>
-          Messages comming....
+
+          {/* Messages Container */}
           <Messages SelectedUser={SelectedUser} />
-          <div className="p-4 gap-3 border-t border-t-gray-300 flex items-center">
-            <input
-              value={TextMessage}
-              onChange={(e) => setTextMessage(e.target.value)}
-              type="text"
-              className="flex-1 focus-visible:ring-transparent mr-2 border border-1/4 h-15 rounded-xl px-2"
-              placeholder="type your message here"
-            />
-            <input ref={inputRef} className="hidden" type="file" />
-            <Button onClick={()=>inputRef.current.click()} className='cursor-pointer'><Image className="text-black font-bold bg-white"/></Button>
-            <Button
-              onClick={() => SendMessageHandler(SelectedUser?._id)}
-              className="bg-blue-700 hover:scale-90"
-            >
-              <Send className="cursor-pointer hover:text-pink-400 font-bold z-10" />
-            </Button>
+
+          {/* Input Area */}
+          <div className="p-4 bg-[#050505] border-t border-white/5">
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 py-2 focus-within:border-red-500/30 transition-all">
+              <button 
+                onClick={() => inputRef.current.click()}
+                className="text-gray-500 hover:text-white transition-colors"
+              >
+                <ImageIcon size={20} />
+              </button>
+              <input ref={inputRef} className="hidden" type="file" />
+              
+              <input
+                value={TextMessage}
+                onChange={(e) => setTextMessage(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && SendMessageHandler(SelectedUser?._id)}
+                type="text"
+                className="flex-1 bg-transparent border-none py-2 text-sm text-white placeholder:text-gray-600 focus:outline-none"
+                placeholder="Write a message..."
+              />
+
+              <Button
+                onClick={() => SendMessageHandler(SelectedUser?._id)}
+                className={`p-2 h-10 w-10 rounded-xl transition-all ${
+                    TextMessage.trim() ? "bg-red-600 hover:bg-red-500 text-white" : "bg-white/5 text-gray-700"
+                }`}
+              >
+                <Send size={18} />
+              </Button>
+            </div>
           </div>
         </section>
       ) : (
-        <div className="hidden md:flex w-full h-full justify-center items-center border-l border-l-gray-300 ml-10">
-          <div className="flex flex-col gap-2 items-center">
-            <MessageCircleMore className="w-30 h-30 " />
-            <span className="font-semibold text-xl">Your Messages</span>
-            <span className="">Message to start chat...</span>
+        /* Empty State */
+        <section className="flex-1 hidden md:flex flex-col items-center justify-center bg-[#080808] p-10">
+          <div className="relative">
+            <div className="absolute inset-0 bg-red-600/20 blur-[100px] rounded-full" />
+            <MessageCircleMore className="w-24 h-24 text-white/10 relative z-10" />
           </div>
-        </div>
+          <h2 className="text-2xl font-black mt-6 tracking-tighter">Your Messages</h2>
+          <p className="text-gray-500 text-sm mt-2 font-medium">Select a creator to start a conversation</p>
+          <Button 
+            onClick={() => dispatch(setSelectedUser(SuggestedUsers[0]))}
+            className="mt-6 bg-white text-black font-black uppercase text-xs tracking-widest px-8 rounded-full hover:bg-gray-200"
+          >
+            Start Chatting
+          </Button>
+        </section>
       )}
     </div>
   );

@@ -8,3 +8,31 @@
   scroll-behavior: smooth;
   box-sizing: border-box;
 }
+
+html, body {
+  background-color: #050505; /* Matches your FunApp theme */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation: progress 5s linear forwards;
+}
+
+@keyframes storyProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.animate-story-progress {
+  animation: storyProgress 5s linear forwards;
+}

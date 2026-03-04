@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import * as Dialog from '@radix-ui/react-dialog';
-import { ScrollText, PlusCircle } from 'lucide-react';
+import { ScrollText, Plus, Sparkles, X } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -10,10 +10,10 @@ import StoryViewer from './StoryViewer.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Stories = () => {
-  const { user, Stories = [],myStories=[],SuggestedUsers } = useSelector((store) => store.auth);
+  const { user, Stories = [], myStories = [], SuggestedUsers = [] } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
-  const location = useLocation()
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null);
@@ -22,47 +22,26 @@ const Stories = () => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [showViewer, setShowViewer] = useState(false);
   const fileInputRef = useRef();
-// const hasStory = myStories?.length > 0;
-  const HideStory = location.pathname === "/";
- useEffect(() => {
-    const HideStory = location.pathname === "/";
-  }, [navigate]);
 
-  let hasStory = myStories.length > 0;
+  const isHomePage = location.pathname === "/";
+
+  // Unified Story Fetching Logic
   useEffect(() => {
-    const getStories = async () => {
+    const fetchAllStories = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/story/allstories`,
-          { withCredentials: true }
-        );
-        if (res.data.success) {
-          dispatch(setStories(res.data.stories));
-        }
+        const [allRes, myRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/story/allstories`, { withCredentials: true }),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/story/myStory`, { withCredentials: true })
+        ]);
+        
+        if (allRes.data.success) dispatch(setStories(allRes.data.stories));
+        if (myRes.data.success) dispatch(setmyStories(myRes.data.data));
       } catch (error) {
-        toast.error(error?.response?.data?.message || "Couldn't fetch stories");
+        console.error("Story fetch error", error);
       }
     };
-    getStories();
-  }, [dispatch]);
-
-    useEffect(() => {
-    const getMyStories = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/story/myStory`,
-          { withCredentials: true }
-        );
-        if (res.data.success) {
-          dispatch(setmyStories(res.data.data));
-          
-        }
-      } catch (error) {
-        toast.error(error?.response?.data?.message || "Couldn't fetch stories");
-      }
-    };
-    getMyStories();
-  }, [dispatch]);
+    if(isHomePage) fetchAllStories();
+  }, [dispatch, isHomePage]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -74,227 +53,170 @@ const Stories = () => {
 
   const handleUpload = async () => {
     if (!image) return;
-
     setUploading(true);
     const formData = new FormData();
     formData.append('image', image);
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/story/addstory`,
         formData,
-        {
-          withCredentials: true,
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      );
-      toast.success('Story uploaded successfully!');
-      dispatch(setmyStories([res.data.story,...myStories]))
-      setOpen(false);
-      setPreview(null);
-      setImage(null);
-
-      // Refetch stories after upload
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/story/allstories`,
-        { withCredentials: true }
+        { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
       );
       if (res.data.success) {
-        dispatch(setStories(res.data.stories));
+        toast.success('Story live!');
+        setOpen(false);
+        setPreview(null);
+        setImage(null);
+        // Refresh local state
+        dispatch(setmyStories([res.data.story, ...myStories]));
       }
     } catch (error) {
-      toast.error('Upload failed. Please try again.');
-      console.error('Upload error:', error);
+      toast.error('Upload failed');
     } finally {
       setUploading(false);
     }
   };
 
-const openUserStory = () => {
-  if (myStories?.length > 0) {
-    setSelectedStory(myStories[0]);
-    setShowViewer(true);
-  }
-};
-
-
-  const openOtherStory = (story) => {
-    setSelectedStory(story);
-    setShowViewer(true);
+  const openUserStory = () => {
+    if (myStories?.length > 0) {
+      setSelectedStory(myStories[0]);
+      setShowViewer(true);
+    }
   };
 
-  useEffect(()=>{
-    let testAraay = []
-Stories.forEach(story => {
-  if(story.author._id === user?._id){
-    testAraay.push(story)
-  }
-});
-if (testAraay.length == 0 ){dispatch(setmyStories([]))}
-  },[])
-
-  useEffect(()=>{
-hasStory = Stories.length > 0
-  },[])
   return (
-    <div className={`w-full md:pl-[17%] px-4 py-2 bg-white rounded-xl shadow-sm mb-4 ${HideStory ? 'block':'hidden'}`}>
-      <div className="md:flex hidden items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold flex items-center gap-1">
-          <ScrollText className="w-5 h-5 text-pink-500" />
-          Stories
+    <div className={`w-full md:pl-[18%] lg:pl-[16%] px-4 pt-6 pb-2 bg-transparent transition-all duration-500 ${isHomePage ? 'block' : 'hidden'}`}>
+      
+      {/* Header Label */}
+      <div className="flex items-center gap-2 mb-4 px-2">
+        <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+        <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+          Recent Stories
         </h2>
       </div>
 
-      <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-        {/* Your Story */}
-        {hasStory ? (
-          <div
-            onClick={openUserStory}
-            className="relative cursor-pointer group flex flex-col items-center"
-          >
-            <Avatar.Root className="w-14 h-14 relative">
+      <div className="flex items-center space-x-5 overflow-x-auto scrollbar-hide pb-4">
+        
+        {/* CREATE / VIEW MY STORY */}
+        <div className="flex flex-col items-center flex-shrink-0 group">
+          <div className="relative p-[3px] rounded-full bg-gradient-to-tr from-gray-700 to-gray-800 transition-transform duration-300 active:scale-90">
+            <Avatar.Root 
+              onClick={myStories.length > 0 ? openUserStory : () => setOpen(true)}
+              className="w-16 h-16 md:w-20 md:h-20 cursor-pointer block"
+            >
               <Avatar.Image
                 src={user?.profilePicture}
-                alt={user?.username}
-                className="w-full h-full rounded-full object-cover border-2 border-green-500 p-0.5 group-hover:scale-105 transition-transform"
+                className="w-full h-full rounded-full object-cover border-[3px] border-[#050505]"
               />
-              <Avatar.Fallback className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-sm">
-                {user?.username?.[0]?.toUpperCase()}
+              <Avatar.Fallback className="w-full h-full bg-white/10 rounded-full flex items-center justify-center text-xl font-bold">
+                {user?.username?.[0]}
               </Avatar.Fallback>
             </Avatar.Root>
-            <span className="text-xs mt-1">Your Story</span>
-            {/* <div onClick={handleUpload} className="absolute bottom-5 right-0 w-5 h-5 z-10 hover:scale-110 bg-pink-500 rounded-full flex items-center justify-center border-2 border-white">
-                  <PlusCircle  className="w-4 h-4 text-white" />
-                </div> */}
-          </div>
-        ) : (
-          <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger asChild>
-              <div className="relative cursor-pointer group flex flex-col items-center">
-                <Avatar.Root onClick={openUserStory} className="w-14 h-14 relative">
-                  <Avatar.Image
-                    src={user?.profilePicture}
-                    alt={user?.username}
-                    className="w-full h-full rounded-full object-cover border-2 border-pink-500 p-0.5 group-hover:scale-105 transition-transform"
-                  />
-                  <Avatar.Fallback className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-sm">
-                    {user?.username?.[0]?.toUpperCase()}
-                  </Avatar.Fallback>
-                </Avatar.Root>
-                <div className="absolute bottom-5 right-0 w-5 h-5 bg-pink-500 rounded-full flex items-center justify-center border-2 border-white">
-                  <PlusCircle className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-xs mt-1">Your Story</span>
+            
+            {myStories.length === 0 && (
+              <div 
+                onClick={() => setOpen(true)}
+                className="absolute bottom-1 right-1 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center border-[3px] border-[#050505] group-hover:bg-blue-500 transition-colors cursor-pointer"
+              >
+                <Plus size={14} className="text-white stroke-[3px]" />
               </div>
-            </Dialog.Trigger>
+            )}
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 mt-2 tracking-tight">Your Story</span>
+        </div>
 
-            <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
-              <Dialog.Content className="fixed z-50 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl w-[90%] max-w-sm shadow-2xl transition-all duration-300">
-                <Dialog.Title className="text-lg font-bold mb-3 text-gray-700">
-                  Upload a Story
-                </Dialog.Title>
-                {preview ? (
-                  <img
-                    src={preview}
-                    alt="preview"
-                    className="w-full h-48 object-cover rounded-md mb-3 shadow"
-                  />
-                ) : (
-                  <div className="w-full h-48 flex items-center justify-center border-2 border-dashed rounded-md mb-3 text-gray-400 text-sm">
-                    No image selected
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                />
-                <button
-                  onClick={() => fileInputRef.current.click()}
-                  className="w-full py-2 mb-2 bg-blue-500 text-white rounded-md hover:bg-pink-600 transition font-medium"
-                  disabled={uploading}
-                >
-                  Choose Image
-                </button>
-                <button
-                  onClick={handleUpload}
-                  disabled={!image || uploading}
-                  className={`w-full py-2 rounded-md font-medium transition ${
-                    image && !uploading
-                      ? 'bg-green-500 hover:bg-green-600 text-white'
-                      : 'bg-green-300 text-white cursor-not-allowed'
-                  }`}
-                >
-                  {uploading ? 'Uploading...' : 'Upload'}
-                </button>
-              </Dialog.Content>
-            </Dialog.Portal>
-          </Dialog.Root>
-        )}
-
-        {/* Story Viewer */}
-        {showViewer && selectedStory && (
-          <StoryViewer
-            story={selectedStory}
-            open={showViewer}
-            setOpen={setShowViewer}
-            onClose={() => {
-              setShowViewer(false);
-              setSelectedStory(null);
-            }}
-          />
-        )}
-
-        {/* Stories of Other Users */}
-        { Stories.filter((story)=>story?._id != user?._id).length > 0 ? (Stories.map((story) => (
+        {/* OTHER STORIES */}
+        {Stories.filter(s => s.author?._id !== user?._id).map((story) => (
           <div
             key={story._id}
-            onClick={() => openOtherStory(story)}
-            className="flex flex-col items-center cursor-pointer"
+            onClick={() => { setSelectedStory(story); setShowViewer(true); }}
+            className="flex flex-col items-center flex-shrink-0 animate-in fade-in zoom-in duration-300"
           >
-            <Avatar.Root className="w-14 h-14 relative">
-              <Avatar.Image
-                src={story.author?.ProfilePicture}
-                alt={story.author?.username}
-                className="w-full h-full rounded-full object-cover border-2 border-pink-500 p-0.5 hover:scale-105 transition-transform"
-              />
-              <Avatar.Fallback className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-sm">
-                {story.author?.username?.[0]?.toUpperCase()}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            <span className="text-xs mt-1 truncate max-w-[56px]">
+            <div className="p-[3px] rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+              <Avatar.Root className="w-16 h-16 md:w-20 md:h-20 border-[3px] border-[#050505] rounded-full overflow-hidden block">
+                <Avatar.Image
+                  src={story.author?.ProfilePicture}
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                />
+              </Avatar.Root>
+            </div>
+            <span className="text-[10px] font-bold text-gray-200 mt-2 truncate max-w-[65px]">
               {story.author?.username}
             </span>
           </div>
-        ))):(<div className='flex justify-center items-center gap-2'>
-          {/* <span>users</span> */}
-{
-  SuggestedUsers.map((item)=>{
-          return (
-            <div onClick={()=>navigate(`profile/${item?._id}`)} className='flex flex-col' key={item?._id}>
-                <Avatar.Root className="w-14 h-14 relative">
-              <Avatar.Image
-                src={item?.ProfilePicture}
-                alt={item?.username}
-                className="w-full h-full rounded-full object-cover p-0.5 hover:scale-105 transition-transform"
-              />
-              <Avatar.Fallback className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-sm">
-                {item.username?.[0]?.toUpperCase()}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            <span className="text-xs mt-1 truncate max-w-[56px]">
-              {item.username}
-            </span>
+        ))}
 
+        {/* SUGGESTIONS (IF NO STORIES) */}
+        {Stories.length <= 1 && SuggestedUsers.map((item) => (
+          <div 
+            key={item?._id} 
+            onClick={() => navigate(`profile/${item?._id}`)}
+            className="flex flex-col items-center flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+          >
+            <div className="p-[2px] rounded-full border border-dashed border-gray-600">
+                <Avatar.Root className="w-16 h-16 md:w-20 md:h-20 block border-[3px] border-transparent">
+                  <Avatar.Image src={item?.ProfilePicture} className="w-full h-full rounded-full object-cover grayscale" />
+                  <Avatar.Fallback className="w-full h-full bg-gray-800 rounded-full flex items-center justify-center" />
+                </Avatar.Root>
             </div>
-          )
-        })
-}
-        </div>)}
+            <span className="text-[10px] font-medium text-gray-500 mt-2 truncate max-w-[65px]">{item.username}</span>
+          </div>
+        ))}
       </div>
+
+      {/* UPLOAD DIALOG */}
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]" />
+          <Dialog.Content className="fixed z-[101] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#121212] border border-white/10 p-8 rounded-[2.5rem] w-[95%] max-w-sm shadow-2xl">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4">
+                 <Sparkles className="text-blue-500" />
+              </div>
+              <Dialog.Title className="text-xl font-black text-white tracking-tight mb-1">Share a Moment</Dialog.Title>
+              <Dialog.Description className="text-gray-500 text-sm mb-6">This story will disappear in 24 hours.</Dialog.Description>
+
+              <div className="relative w-full aspect-[9/12] bg-white/5 rounded-3xl border border-dashed border-white/10 overflow-hidden mb-6 flex items-center justify-center">
+                {preview ? (
+                  <>
+                    <img src={preview} className="w-full h-full object-cover" />
+                    <button onClick={() => setPreview(null)} className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white"><X size={16}/></button>
+                  </>
+                ) : (
+                  <button onClick={() => fileInputRef.current.click()} className="flex flex-col items-center gap-2 text-gray-500 hover:text-white transition-colors">
+                    <Plus size={32} />
+                    <span className="text-xs font-bold uppercase tracking-widest">Select Media</span>
+                  </button>
+                )}
+              </div>
+
+              <input type="file" accept="image/*" hidden ref={fileInputRef} onChange={handleFileChange} />
+              
+              <div className="w-full flex flex-col gap-3">
+                <button
+                  onClick={handleUpload}
+                  disabled={!image || uploading}
+                  className="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-gray-200 disabled:opacity-50 transition-all"
+                >
+                  {uploading ? 'Sharing...' : 'Post Story'}
+                </button>
+                <button onClick={() => setOpen(false)} className="text-gray-500 text-xs font-bold uppercase tracking-widest pt-2">Cancel</button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* VIEWER PORTAL */}
+      {showViewer && selectedStory && (
+        <StoryViewer
+          story={selectedStory}
+          open={showViewer}
+          setOpen={setShowViewer}
+          onClose={() => { setShowViewer(false); setSelectedStory(null); }}
+        />
+      )}
     </div>
   );
 };

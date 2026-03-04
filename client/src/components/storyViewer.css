@@ -10,3 +10,12 @@
 .animate-progress {
   animation: progress 5s linear forwards;
 }
+
+@keyframes storyProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.animate-story-progress {
+  animation: storyProgress 5s linear forwards;
+}
