@@ -9,6 +9,7 @@ import { Loader2, Sparkles } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "../redux/authSlice";
 import { FaHeart } from "react-icons/fa";
+import Logo from "./Logo";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ const Login = () => {
         </div>
         
         <p className="mt-8 text-center text-[10px] text-gray-600 tracking-[0.2em] uppercase">
-          &copy; 2026 FUNAPP Digital Experience
+          &copy; 2026 FRAME Digital Experience
         </p>
       </div>
     </div>
