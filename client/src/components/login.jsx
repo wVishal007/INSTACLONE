@@ -65,7 +65,12 @@ const Login = () => {
         <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-10 rounded-[2.5rem] shadow-2xl">
           {/* Header Section */}
           <div className="flex flex-col items-center mb-10">
-           <Logo/>
+            <div className="bg-gradient-to-br from-red-500 to-pink-600 p-3 rounded-2xl mb-4 shadow-lg shadow-red-500/20">
+               <FaHeart className="text-white text-2xl animate-pulse" />
+            </div>
+            <h1 className="text-4xl font-black tracking-tighter bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              FUNAPP
+            </h1>
             <p className="text-gray-400 text-sm mt-2 text-center font-medium">
               Welcome back. Your world is waiting.
             </p>

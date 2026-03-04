@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const ProtectedRoutes = ({children}) => {
-    const navigate = useNavigate()
-    const {user} = useSelector(store=>store.auth)
-    useEffect(() => {
-    if(!user){
-navigate('/login')
+const ProtectedRoutes = ({ children }) => {
+  const navigate = useNavigate();
+  const { user } = useSelector((store) => store.auth);
+
+  // ✅ run effect every time user changes
+  useEffect(() => {
+    if (user === null) {
+      navigate("/login");
     }
-    }, [])
-    
-  return <>{children}</>
-}
+  }, [user, navigate]);
 
-export default ProtectedRoutes
+  // ✅ Show nothing while session is loading
+  if (user === undefined) return null;
+
+  return <>{children}</>;
+};
+
+export default ProtectedRoutes;
