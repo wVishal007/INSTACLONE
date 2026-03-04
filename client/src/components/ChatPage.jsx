@@ -17,7 +17,7 @@ import axios from "axios";
 const ChatPage = () => {
   const inputRef = useRef()
   const [TextMessage, setTextMessage] = useState("");
-  const { user, SuggestedUsers, SelectedUser } = useSelector(
+  const { user, SuggestedUsers=[], SelectedUser } = useSelector(
     (store) => store.auth
   );
   const dispatch = useDispatch();

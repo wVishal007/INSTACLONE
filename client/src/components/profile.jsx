@@ -54,7 +54,6 @@ const Profile = () => {
 
   const LogOutHandler = async () => {
       try {
-        console.log('hello')
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/user/logout`, {
           withCredentials: true,
         });

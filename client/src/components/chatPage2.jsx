@@ -20,7 +20,7 @@ import { FaBackspace, FaBackward } from "react-icons/fa";
 
 const chatPage2 = () => {
   const [TextMessage, setTextMessage] = useState("");
-  const { user, SuggestedUsers, SelectedUser } = useSelector(
+  const { user, SuggestedUsers=[], SelectedUser } = useSelector(
     (store) => store.auth
   );
   const dispatch = useDispatch();

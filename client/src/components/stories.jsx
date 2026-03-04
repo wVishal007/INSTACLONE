@@ -10,7 +10,7 @@ import StoryViewer from './StoryViewer.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Stories = () => {
-  const { user, Stories = [],myStories=[],SuggestedUsers } = useSelector((store) => store.auth);
+  const { user, Stories = [],myStories=[],SuggestedUsers=[] } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const location = useLocation()
   const navigate = useNavigate()
