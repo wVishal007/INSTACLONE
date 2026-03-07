@@ -27,7 +27,7 @@ if(userId){
 }
 io.emit('getOnlineUsers',Object.keys(userSocketMap))
 
-socket.on('disconnect',(socket)=>{
+socket.on('disconnect', () => {
     if(userId){
         delete userSocketMap[userId]
     }

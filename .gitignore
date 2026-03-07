@@ -1,2 +1,5 @@
 node_modules
 .env
+project_code.txt
+try.js
+!.env.example

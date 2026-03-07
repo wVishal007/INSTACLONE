@@ -2,17 +2,23 @@ import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
     senderID:{
-        type:mongoose.Schema.Types.ObjectId,ref:'user'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user'
     },
     recieverID:{
-        type:mongoose.Schema.Types.ObjectId,ref:'user'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user'
     },
     message:{
-        type:String,required:true
+        type:String,
+        required:true
     },
     PostMessage:{
-          type:mongoose.Schema.Types.ObjectId,ref:'Post'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Post'
     }
+},{
+    timestamps:true
 });
 
 export const Message = mongoose.model('Message',messageSchema)
